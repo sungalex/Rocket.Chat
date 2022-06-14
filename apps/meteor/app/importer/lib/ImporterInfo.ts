@@ -1,9 +1,14 @@
 export class ImporterInfo {
 	key: string;
+
 	name: string;
+
 	mimeType: string;
+
 	warnings: Array<{ href: string; text: string }>;
+
 	importer: any;
+
 	instance: any;
 
 	/**

@@ -1,16 +1,16 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
 import { Meteor } from 'meteor/meteor';
+import { IUser } from '@rocket.chat/core-typings';
 
-import { RocketChatImportFileInstance } from '../startup/store';
+import { Importers } from '..';
 import { hasPermission } from '../../../authorization/server';
 import { Imports } from '../../../models/server';
 import { ProgressStep } from '../../lib/ImporterProgressStep';
-import { Importers } from '..';
-import { IUser } from '@rocket.chat/core-typings';
+import { RocketChatImportFileInstance } from '../startup/store';
 
-export const getImportFileData = async (userId: IUser['_id']) => {
+export const getImportFileData = async (userId: IUser['_id']): Promise<any> => {
 	if (!userId) {
 		throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'getImportFileData' });
 	}
