@@ -49,6 +49,7 @@ API.v1.addRoute(
 	},
 );
 
+// @ts-ignore
 API.v1.addRoute(
 	'getImportFileData',
 	{ authRequired: true },
@@ -63,7 +64,7 @@ API.v1.addRoute(
 		},
 	},
 );
-
+// @ts-ignore
 API.v1.addRoute(
 	'getImportProgress',
 	{ authRequired: true },
@@ -78,7 +79,7 @@ API.v1.addRoute(
 		},
 	},
 );
-
+// @ts-ignore
 API.v1.addRoute(
 	'getLatestImportOperations',
 	{ authRequired: true },
@@ -161,7 +162,7 @@ API.v1.addRoute(
 );
 
 API.v1.addRoute(
-	'getCurrentImportOperation',
+	'getCurrentImportOperations',
 	{ authRequired: true },
 	{
 		get() {
