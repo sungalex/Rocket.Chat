@@ -266,5 +266,7 @@ export interface IRoomWithRetentionPolicy extends IRoom {
 		filesOnly: boolean;
 		excludePinned: boolean;
 		ignoreThreads: boolean;
+		enabled?: boolean;
+		overrideGlobal?: boolean;
 	};
 }
