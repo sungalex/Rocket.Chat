@@ -1,23 +1,23 @@
-import { Sidebar, ActionButton, IconProps } from '@rocket.chat/fuselage';
+import { Sidebar, ActionButton } from '@rocket.chat/fuselage';
 import { useMutableCallback, usePrefersReducedMotion } from '@rocket.chat/fuselage-hooks';
-import React, { memo, useState, VFC } from 'react';
+import React, { memo, ReactNode, useState, VFC } from 'react';
 
 import { useShortTimeAgo } from '../../hooks/useTimeAgo';
 
 type ExtendedProps = {
-	icon?: IconProps['name'];
-	title?: React.ReactNode;
-	avatar?: React.ReactNode | boolean;
-	actions?: React.ReactNode;
+	icon?: ReactNode;
+	title?: ReactNode;
+	avatar?: ReactNode;
+	actions?: ReactNode;
 	href?: string;
 	time?: any;
-	menu?: () => React.ReactNode;
-	subtitle?: React.ReactNode;
-	badges?: React.ReactNode;
+	menu?: () => ReactNode;
+	subtitle?: ReactNode;
+	badges?: ReactNode;
 	unread?: boolean;
 	selected?: boolean;
 	menuOptions?: any;
-	titleIcon?: React.ReactNode;
+	titleIcon?: ReactNode;
 	threadUnread?: boolean;
 };
 

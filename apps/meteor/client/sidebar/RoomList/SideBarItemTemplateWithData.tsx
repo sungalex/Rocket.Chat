@@ -9,7 +9,7 @@ import {
 } from '@rocket.chat/core-typings';
 import { Badge, Sidebar } from '@rocket.chat/fuselage';
 import { useLayout, useTranslation } from '@rocket.chat/ui-contexts';
-import React, { AllHTMLAttributes, ComponentType, memo, ReactElement, ReactNode } from 'react';
+import React, { AllHTMLAttributes, ComponentType, CSSProperties, memo, ReactElement, ReactNode } from 'react';
 
 import { RoomIcon } from '../../components/RoomIcon';
 import { roomCoordinator } from '../../lib/rooms/roomCoordinator';
@@ -36,25 +36,26 @@ const getMessage = (room: IRoom, lastMessage: IMessage | undefined, t: ReturnTyp
 type RoomListRowProps = {
 	extended: boolean;
 	t: ReturnType<typeof useTranslation>;
-	SideBarItemTemplate: ComponentType<
-		{
-			icon: ReactNode;
-			title: ReactNode;
-			avatar: ReactNode;
-			// actions: unknown;
-			href: string;
-			time?: Date;
-			menu?: ReactNode;
-			menuOptions?: unknown;
-			subtitle?: ReactNode;
-			titleIcon?: string;
-			badges?: ReactNode;
-			threadUnread?: boolean;
-			unread?: boolean;
-			selected?: boolean;
-			is?: string;
-		} & AllHTMLAttributes<HTMLElement>
-	>;
+	SideBarItemTemplate: ComponentType<{
+		icon: ReactNode;
+		title: ReactNode;
+		avatar: ReactNode;
+		// actions: unknown;
+		href: string;
+		time?: Date;
+		menu?: () => ReactNode;
+		menuOptions?: unknown;
+		subtitle?: ReactNode;
+		titleIcon?: ReactNode;
+		badges?: ReactNode;
+		threadUnread?: boolean;
+		unread?: boolean;
+		selected?: boolean;
+		is?: string;
+		id?: string;
+		onClick?: () => void;
+		style?: CSSProperties;
+	}>;
 	AvatarTemplate: ReturnType<typeof useAvatarTemplate>;
 	openedRoom?: string;
 	// sidebarViewMode: 'extended';
@@ -150,20 +151,20 @@ function SideBarItemTemplateWithData({
 			badges={badges}
 			avatar={AvatarTemplate && <AvatarTemplate {...room} />}
 			menu={
-				!isAnonymous &&
-				!isQueued &&
-				((): ReactElement => (
-					<RoomMenu
-						alert={alert}
-						threadUnread={threadUnread}
-						rid={rid}
-						unread={!!unread}
-						roomOpen={false}
-						type={type}
-						cl={cl}
-						name={title}
-					/>
-				))
+				!isAnonymous && !isQueued
+					? (): ReactNode => (
+							<RoomMenu
+								alert={alert}
+								threadUnread={threadUnread}
+								rid={rid}
+								unread={!!unread}
+								roomOpen={false}
+								type={type}
+								cl={cl}
+								name={title}
+							/>
+					  )
+					: undefined
 			}
 		/>
 	);

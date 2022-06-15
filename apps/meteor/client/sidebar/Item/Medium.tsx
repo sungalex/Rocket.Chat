@@ -1,22 +1,34 @@
 import { Sidebar, ActionButton } from '@rocket.chat/fuselage';
 import { useMutableCallback, usePrefersReducedMotion } from '@rocket.chat/fuselage-hooks';
-import React, { memo, useState, VFC } from 'react';
+import React, { memo, ReactNode, useState, VFC } from 'react';
 
 type MediumProps = {
-	title: React.ReactNode;
-	titleIcon?: React.ReactNode;
-	avatar: React.ReactNode | boolean;
-	icon?: string;
-	actions?: React.ReactNode;
+	title: ReactNode;
+	titleIcon?: ReactNode;
+	avatar: ReactNode;
+	icon?: ReactNode;
+	actions?: ReactNode;
 	href?: string;
 	unread?: boolean;
-	menu?: () => React.ReactNode;
-	badges?: React.ReactNode;
+	menu?: () => ReactNode;
+	badges?: ReactNode;
 	selected?: boolean;
 	menuOptions?: any;
+	threadUnread?: boolean;
 };
 
-const Medium: VFC<MediumProps> = ({ icon, title = '', avatar, actions, href, badges, unread, menu, ...props }) => {
+const Medium: VFC<MediumProps> = ({
+	icon,
+	title = '',
+	avatar,
+	actions,
+	href,
+	badges,
+	unread,
+	menu,
+	threadUnread: _threadUnread,
+	...props
+}) => {
 	const [menuVisibility, setMenuVisibility] = useState(!!window.DISABLE_ANIMATION);
 
 	const isReduceMotionEnabled = usePrefersReducedMotion();
@@ -29,7 +41,7 @@ const Medium: VFC<MediumProps> = ({ icon, title = '', avatar, actions, href, bad
 	};
 
 	return (
-		<Sidebar.Item {...props} {...({ href } as any)} clickable={!!href}>
+		<Sidebar.Item {...props} {...{ href }} clickable={!!href}>
 			{avatar && <Sidebar.Item.Avatar>{avatar}</Sidebar.Item.Avatar>}
 			<Sidebar.Item.Content>
 				<Sidebar.Item.Wrapper>
