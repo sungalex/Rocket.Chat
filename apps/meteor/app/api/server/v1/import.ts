@@ -4,6 +4,7 @@ import { API } from '../api';
 import { hasPermission } from '../../../authorization/server';
 import { Imports } from '../../../models/server';
 import { Importers } from '../../../importer/server';
+import { getImportFileData } from '../../../importer/server/methods/getImportFileData';
 
 API.v1.addRoute(
 	'uploadImportFile',
@@ -54,11 +55,8 @@ API.v1.addRoute(
 	'getImportFileData',
 	{ authRequired: true },
 	{
-		get() {
-			let result;
-			Meteor.runAsUser(this.userId, () => {
-				result = Meteor.call('getImportFileData');
-			});
+		async get() {
+			const result = await getImportFileData(this.userId);
 
 			return API.v1.success(result);
 		},
