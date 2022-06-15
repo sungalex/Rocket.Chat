@@ -1,6 +1,8 @@
 import { Session } from 'meteor/session';
 
-export const wipeFailedUploads = (): void => {
+import { callbacks } from '../../../lib/callbacks';
+
+const wipeFailedUploads = (): void => {
 	const uploads = Session.get('uploading');
 
 	if (uploads) {
@@ -10,3 +12,5 @@ export const wipeFailedUploads = (): void => {
 		);
 	}
 };
+
+callbacks.add('enter-room', wipeFailedUploads);

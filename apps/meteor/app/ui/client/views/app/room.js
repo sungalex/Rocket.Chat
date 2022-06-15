@@ -27,7 +27,6 @@ import { isLayoutEmbedded } from '../../../../../client/lib/utils/isLayoutEmbedd
 import { handleError } from '../../../../../client/lib/utils/handleError';
 import { roomCoordinator } from '../../../../../client/lib/rooms/roomCoordinator';
 import { chatMessages } from './room/chatMessages';
-import { wipeFailedUploads } from './room/wipeFailedUploads';
 import { roomHasPurge } from './room/roomHasPurge';
 import { roomFilesOnly } from './room/roomFilesOnly';
 import { roomExcludePinned } from './room/roomExcludePinned';
@@ -826,26 +825,3 @@ Meteor.startup(() => {
 		});
 	});
 });
-
-const restoreDMReplies = (sub) => {
-	if (!sub) {
-		return;
-	}
-
-	const isAReplyInDMFromChannel = FlowRouter.getQueryParam('reply') ? sub.t === 'd' : false;
-	if (isAReplyInDMFromChannel && chatMessages[sub.rid]) {
-		chatMessages[sub.rid].restoreReplies();
-	}
-};
-
-const readMessages = (sub) => {
-	if (!sub) {
-		return;
-	}
-
-	setTimeout(() => readMessage.read(sub.rid), 1000);
-};
-
-callbacks.add('enter-room', wipeFailedUploads);
-callbacks.add('enter-room', restoreDMReplies);
-callbacks.add('enter-room', readMessages);
