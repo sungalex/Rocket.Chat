@@ -11,13 +11,13 @@ import { openUserCard } from '../../../lib/UserCard';
 import { messageArgs } from '../../../../../../client/lib/utils/messageArgs';
 import { ChatMessage, Rooms, Messages } from '../../../../../models';
 import { t } from '../../../../../utils/client';
-import { chatMessages } from '../room';
 import { EmojiEvents } from '../../../../../reactions/client/init';
 // import { goToRoomById } from '../../../../../../client/lib/goToRoomById';
 import { fireGlobalEvent } from '../../../../../../client/lib/utils/fireGlobalEvent';
 import { isLayoutEmbedded } from '../../../../../../client/lib/utils/isLayoutEmbedded';
 import { onClientBeforeSendMessage } from '../../../../../../client/lib/onClientBeforeSendMessage';
 import { goToRoomById } from '../../../../../../client/lib/utils/goToRoomById';
+import { chatMessages } from './chatMessages';
 
 const mountPopover = (e, i, outerContext) => {
 	let context = $(e.target).parents('.message').data('context');

@@ -28,7 +28,7 @@ export const addMessageToList = (messagesList: IMessage[], message: IMessage): I
 };
 
 Meteor.startup(async function () {
-	const { chatMessages } = await import('../../../ui');
+	const { chatMessages } = await import('../../../ui/client/views/app/lib/chatMessages');
 
 	const getChatMessagesFrom = (msg: IMessage): ChatMessages => {
 		const { rid = Session.get('openedRoom'), tmid = msg._id } = msg;

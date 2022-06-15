@@ -26,16 +26,14 @@ import { RoomManager as NewRoomManager } from '../../../../../client/lib/RoomMan
 import { isLayoutEmbedded } from '../../../../../client/lib/utils/isLayoutEmbedded';
 import { handleError } from '../../../../../client/lib/utils/handleError';
 import { roomCoordinator } from '../../../../../client/lib/rooms/roomCoordinator';
-import { chatMessages } from './room/chatMessages';
-import { roomHasPurge } from './room/roomHasPurge';
-import { roomFilesOnly } from './room/roomFilesOnly';
-import { roomExcludePinned } from './room/roomExcludePinned';
-import { roomMaxAge } from './room/roomMaxAge';
-import { dropzoneHelpers } from './room/dropzoneHelpers';
-import { dropzoneEvents } from './room/dropzoneEvents';
+import { chatMessages } from './lib/chatMessages';
+import { roomHasPurge } from './lib/roomHasPurge';
+import { roomFilesOnly } from './lib/roomFilesOnly';
+import { roomExcludePinned } from './lib/roomExcludePinned';
+import { roomMaxAge } from './lib/roomMaxAge';
+import { dropzoneHelpers } from './lib/dropzoneHelpers';
+import { dropzoneEvents } from './lib/dropzoneEvents';
 import './room.html';
-
-export { chatMessages, dropzoneHelpers, dropzoneEvents };
 
 Template.roomOld.helpers({
 	...dropzoneHelpers,

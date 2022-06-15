@@ -7,20 +7,22 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Tracker } from 'meteor/tracker';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { chatMessages, ChatMessages } from '../../../ui';
+import { ChatMessages } from '../../../ui';
 import { callWithErrorHandling } from '../../../../client/lib/utils/callWithErrorHandling';
 import { messageContext } from '../../../ui-utils/client/lib/messageContext';
 import { upsertMessageBulk } from '../../../ui-utils/client/lib/RoomHistoryManager';
 import { Messages } from '../../../models';
 import { fileUpload } from '../../../ui/client/lib/fileUpload';
-import { dropzoneEvents, dropzoneHelpers } from '../../../ui/client/views/app/room';
-import './thread.html';
 import { getUserPreference } from '../../../utils';
 import { settings } from '../../../settings/client';
 import { callbacks } from '../../../../lib/callbacks';
-import './messageBoxFollow';
 import { getCommonRoomEvents } from '../../../ui/client/views/app/lib/getCommonRoomEvents';
 import { keyCodes } from '../../../../client/lib/utils/keyCodes';
+import { chatMessages } from '../../../ui/client/views/app/lib/chatMessages';
+import { dropzoneEvents } from '../../../ui/client/views/app/lib/dropzoneEvents';
+import { dropzoneHelpers } from '../../../ui/client/views/app/lib/dropzoneHelpers';
+import './thread.html';
+import './messageBoxFollow';
 
 const sort = { ts: 1 };
 
