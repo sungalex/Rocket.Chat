@@ -1,13 +1,13 @@
 import type { IRoom } from '@rocket.chat/core-typings';
-import _ from 'underscore';
+import $ from 'jquery';
 import { Blaze } from 'meteor/blaze';
 import moment from 'moment';
-import $ from 'jquery';
+import _ from 'underscore';
 
-import { settings } from '../../../../../settings/client';
-import { userCanDrop } from './userCanDrop';
-import { RoomManager } from '../../../../../ui-utils/client';
+import { settings } from '../../../app/settings/client';
+import { RoomManager } from '../../../app/ui-utils/client';
 import { chatMessages } from './chatMessages';
+import { userCanDrop } from './userCanDrop';
 
 function addToInput(text: string): void {
 	const { input } = chatMessages[RoomManager.openedRoom];
@@ -30,7 +30,7 @@ async function createFileFromUrl(url: string): Promise<File> {
 	const metadata = {
 		type: data.type,
 	};
-	const { mime } = await import('../../../../../utils/lib/mimeTypes');
+	const { mime } = await import('../../../app/utils/lib/mimeTypes');
 	const file = new File(
 		[data],
 		`File - ${moment().format(settings.get('Message_TimeAndDateFormat'))}.${mime.extension(data.type)}`,
@@ -133,7 +133,7 @@ export const dropzoneEvents = {
 				return addToInput(transferData.trim());
 			}
 		}
-		const { mime } = await import('../../../../../utils/lib/mimeTypes');
+		const { mime } = await import('../../../app/utils/lib/mimeTypes');
 		const filesToUpload = files.map((file) => {
 			Object.defineProperty(file, 'type', { value: mime.lookup(file.name) });
 			return {

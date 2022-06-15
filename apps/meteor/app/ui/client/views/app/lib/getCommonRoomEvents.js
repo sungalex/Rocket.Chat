@@ -17,7 +17,7 @@ import { fireGlobalEvent } from '../../../../../../client/lib/utils/fireGlobalEv
 import { isLayoutEmbedded } from '../../../../../../client/lib/utils/isLayoutEmbedded';
 import { onClientBeforeSendMessage } from '../../../../../../client/lib/onClientBeforeSendMessage';
 import { goToRoomById } from '../../../../../../client/lib/utils/goToRoomById';
-import { chatMessages } from './chatMessages';
+import { chatMessages } from '../../../../../../client/lib/utils/chatMessages';
 
 const mountPopover = (e, i, outerContext) => {
 	let context = $(e.target).parents('.message').data('context');

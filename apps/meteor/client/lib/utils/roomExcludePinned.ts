@@ -1,6 +1,6 @@
 import type { IRoomWithRetentionPolicy } from '@rocket.chat/core-typings';
 
-import { settings } from '../../../../../settings/client';
+import { settings } from '../../../app/settings/client';
 
 export function roomExcludePinned(room: IRoomWithRetentionPolicy): boolean {
 	if (!room) {

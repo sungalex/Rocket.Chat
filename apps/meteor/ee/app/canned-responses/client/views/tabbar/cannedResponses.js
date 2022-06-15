@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 
 import { CannedResponse } from '../../collections/CannedResponse';
 import { t } from '../../../../../../app/utils';
-import { chatMessages } from '../../../../../../app/ui/client/views/app/lib/chatMessages';
+import { chatMessages } from '../../../../../../client/lib/utils/chatMessages';
 import { handleError } from '../../../../../../client/lib/utils/handleError';
 import { dispatchToastMessage } from '../../../../../../client/lib/toast';
 

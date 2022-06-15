@@ -18,9 +18,9 @@ import { settings } from '../../../settings/client';
 import { callbacks } from '../../../../lib/callbacks';
 import { getCommonRoomEvents } from '../../../ui/client/views/app/lib/getCommonRoomEvents';
 import { keyCodes } from '../../../../client/lib/utils/keyCodes';
-import { chatMessages } from '../../../ui/client/views/app/lib/chatMessages';
-import { dropzoneEvents } from '../../../ui/client/views/app/lib/dropzoneEvents';
-import { dropzoneHelpers } from '../../../ui/client/views/app/lib/dropzoneHelpers';
+import { chatMessages } from '../../../../client/lib/utils/chatMessages';
+import { dropzoneEvents } from '../../../../client/lib/utils/dropzoneEvents';
+import { dropzoneHelpers } from '../../../../client/lib/utils/dropzoneHelpers';
 import './thread.html';
 import './messageBoxFollow';
 

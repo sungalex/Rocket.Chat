@@ -1,8 +1,8 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { chatMessages } from '../../../app/ui/client/views/app/lib/chatMessages';
 import { callbacks } from '../../../lib/callbacks';
 import { SubscriptionAndRoom } from '../../definitions/SubscriptionAndRoom';
+import { chatMessages } from '../../lib/utils/chatMessages';
 
 const restoreDMReplies = (sub: SubscriptionAndRoom): void => {
 	if (!sub) {

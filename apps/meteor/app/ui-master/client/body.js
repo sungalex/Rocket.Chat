@@ -14,7 +14,7 @@ import { imperativeModal } from '../../../client/lib/imperativeModal';
 import GenericModal from '../../../client/components/GenericModal';
 import { fireGlobalEvent } from '../../../client/lib/utils/fireGlobalEvent';
 import { isLayoutEmbedded } from '../../../client/lib/utils/isLayoutEmbedded';
-import { chatMessages } from '../../ui/client/views/app/lib/chatMessages';
+import { chatMessages } from '../../../client/lib/utils/chatMessages';
 
 Template.body.onRendered(function () {
 	new Clipboard('.clipboard');

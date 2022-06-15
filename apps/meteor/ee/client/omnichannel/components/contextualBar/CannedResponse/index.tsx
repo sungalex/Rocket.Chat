@@ -2,9 +2,9 @@ import { useDebouncedValue, useLocalStorage, useMutableCallback } from '@rocket.
 import { useSetModal, useCurrentRoute, useRoute } from '@rocket.chat/ui-contexts';
 import React, { FC, memo, MouseEvent, useCallback, useMemo, useState } from 'react';
 
-import { chatMessages } from '../../../../../../app/ui/client/views/app/lib/chatMessages';
 import { useRecordList } from '../../../../../../client/hooks/lists/useRecordList';
 import { AsyncStatePhase } from '../../../../../../client/lib/asyncState';
+import { chatMessages } from '../../../../../../client/lib/utils/chatMessages';
 import { useRoom } from '../../../../../../client/views/room/contexts/RoomContext';
 import { useCannedResponseFilterOptions } from '../../../hooks/useCannedResponseFilterOptions';
 import { useCannedResponseList } from '../../../hooks/useCannedResponseList';

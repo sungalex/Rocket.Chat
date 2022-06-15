@@ -1,6 +1,6 @@
 import type { IRoom } from '@rocket.chat/core-typings';
 
-import { settings } from '../../../../../settings/client';
+import { settings } from '../../../app/settings/client';
 import { userCanDrop } from './userCanDrop';
 
 export const dropzoneHelpers = {
