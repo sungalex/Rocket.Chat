@@ -9,7 +9,7 @@ import type {
 	IUser,
 	RocketChatRecordDeleted,
 } from '@rocket.chat/core-typings';
-import type { Collection, Cursor, Db, FilterQuery, FindOneOptions, UpdateQuery, UpdateWriteOpResult, WithoutProjection } from 'mongodb';
+import type { Collection, Cursor, Db, FilterQuery, FindOneOptions, UpdateQuery, UpdateWriteOpResult } from 'mongodb';
 import type { PaginatedRequest } from '@rocket.chat/rest-typings';
 import { ILivechatAgentStatus, UserStatus } from '@rocket.chat/core-typings';
 
@@ -55,7 +55,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 	 * @param {null} _scope the value for the role scope (room id) - not used in the users collection
 	 * @param {any} options
 	 */
-	findUsersInRoles(roleIds: IRole['_id'][] | IRole['_id'], _scope: null, options: WithoutProjection<FindOneOptions<IUser>>) {
+	findUsersInRoles(roleIds: IRole['_id'][] | IRole['_id'], _scope: null, options: FindOneOptions<IUser>): Cursor<IUser> {
 		roleIds = Array.isArray(roleIds) ? roleIds : [roleIds];
 
 		const query: FilterQuery<IUser> = {
@@ -71,7 +71,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query, options);
 	}
 
-	findOneAgentById(_id: ILivechatAgent['_id'], options: WithoutProjection<FindOneOptions<ILivechatAgent>>): Promise<ILivechatAgent | null> {
+	findOneAgentById(_id: ILivechatAgent['_id'], options: FindOneOptions<ILivechatAgent>): Promise<ILivechatAgent | null> {
 		const query: FilterQuery<ILivechatAgent> = {
 			_id,
 			roles: 'livechat-agent',
@@ -85,11 +85,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 	 * @param {any} query
 	 * @param {any} options
 	 */
-	findUsersInRolesWithQuery(
-		roleIds: IRole['_id'][] | IRole['_id'],
-		query: FilterQuery<IUser>,
-		options: WithoutProjection<FindOneOptions<IUser>>,
-	) {
+	findUsersInRolesWithQuery(roleIds: IRole['_id'][] | IRole['_id'], query: FilterQuery<IUser>, options: FindOneOptions<IUser>) {
 		roleIds = Array.isArray(roleIds) ? roleIds : [roleIds];
 
 		Object.assign(query, { roles: { $in: roleIds } });
@@ -97,11 +93,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findOneByUsernameAndRoomIgnoringCase(
-		username: IUser['username'] | RegExp,
-		rid: IRoom['_id'],
-		options: WithoutProjection<FindOneOptions<IUser>>,
-	) {
+	findOneByUsernameAndRoomIgnoringCase(username: IUser['username'] | RegExp, rid: IRoom['_id'], options: FindOneOptions<IUser>) {
 		if (typeof username === 'string') {
 			username = new RegExp(`^${escapeRegExp(username)}$`, 'i');
 		}
@@ -114,7 +106,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query, options);
 	}
 
-	findOneByIdAndLoginHashedToken(_id: IUser['_id'], token: string, options: WithoutProjection<FindOneOptions<IUser>>) {
+	findOneByIdAndLoginHashedToken(_id: IUser['_id'], token: string, options: FindOneOptions<IUser>) {
 		const query: FilterQuery<IUser> = {
 			_id,
 			'services.resume.loginTokens.hashedToken': token,
@@ -126,7 +118,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 	findByActiveUsersExcept(
 		searchTerm: string,
 		exceptions: IUser['username'][] | IUser['username'] = [],
-		options: WithoutProjection<FindOneOptions<IUser>> = {},
+		options: FindOneOptions<IUser> = {},
 		// FIXME: v
 		searchFields: any,
 		extraQuery: any[] = [],
@@ -174,13 +166,13 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findActive(query: FilterQuery<IUser>, options: WithoutProjection<FindOneOptions<IUser>> = {}) {
+	findActive(query: FilterQuery<IUser>, options: FindOneOptions<IUser> = {}) {
 		Object.assign(query, { active: true });
 
 		return this.find(query, options);
 	}
 
-	findActiveByIds(userIds: IUser['_id'][], options: WithoutProjection<FindOneOptions<IUser>> = {}) {
+	findActiveByIds(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}) {
 		const query = {
 			_id: { $in: userIds },
 			active: true,
@@ -189,7 +181,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findActiveByIdsOrUsernames(userIds: IUser['_id'][], options: WithoutProjection<FindOneOptions<IUser>> = {}) {
+	findActiveByIdsOrUsernames(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}) {
 		const query = {
 			$or: [{ _id: { $in: userIds } }, { username: { $in: userIds } }],
 			active: true,
@@ -198,7 +190,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findByIds(userIds: IUser['_id'][], options: WithoutProjection<FindOneOptions<IUser>> = {}) {
+	findByIds(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}) {
 		const query = {
 			_id: { $in: userIds },
 		};
@@ -206,7 +198,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findOneByUsernameIgnoringCase(username: IUser['username'] | RegExp, options: WithoutProjection<FindOneOptions<IUser>> = {}) {
+	findOneByUsernameIgnoringCase(username: IUser['username'] | RegExp, options: FindOneOptions<IUser> = {}) {
 		if (typeof username === 'string') {
 			username = new RegExp(`^${escapeRegExp(username)}$`, 'i');
 		}
@@ -228,13 +220,13 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query);
 	}
 
-	findLDAPUsers(options: WithoutProjection<FindOneOptions<IUser>>) {
+	findLDAPUsers(options: FindOneOptions<IUser>) {
 		const query = { ldap: true };
 
 		return this.find(query, options);
 	}
 
-	findConnectedLDAPUsers(options: WithoutProjection<FindOneOptions<IUser>>) {
+	findConnectedLDAPUsers(options: FindOneOptions<IUser>) {
 		const query = {
 			'ldap': true,
 			'services.resume.loginTokens': {
@@ -482,7 +474,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		termRegex: RegExp,
 		exceptions: string[] | string = [],
 		conditions: string[] = [],
-		options: WithoutProjection<FindOneOptions<IUser>> = {},
+		options: FindOneOptions<IUser> = {},
 	) {
 		if (!Array.isArray(exceptions)) {
 			exceptions = [exceptions];
@@ -998,13 +990,13 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 	}
 
 	// Voip functions
-	findOneByAgentUsername(username: ILivechatAgent['username'], options: WithoutProjection<FindOneOptions<ILivechatAgent>>) {
+	findOneByAgentUsername(username: ILivechatAgent['username'], options: FindOneOptions<ILivechatAgent>) {
 		const query = { username, roles: 'livechat-agent' };
 
 		return this.findOne(query, options);
 	}
 
-	findOneByExtension(extension: string, options: WithoutProjection<FindOneOptions<ILivechatAgent>>) {
+	findOneByExtension(extension: string, options: FindOneOptions<ILivechatAgent>) {
 		const query = {
 			extension,
 		};
@@ -1012,7 +1004,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query, options);
 	}
 
-	findByExtensions(extensions: string[], options: WithoutProjection<FindOneOptions<ILivechatAgent>>): Cursor<IUser> {
+	findByExtensions(extensions: string[], options: FindOneOptions<ILivechatAgent>): Cursor<IUser> {
 		const query = {
 			extension: {
 				$in: extensions,
@@ -1022,7 +1014,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	getVoipExtensionByUserId(agentId: ILivechatAgent['_id'], options: WithoutProjection<FindOneOptions<ILivechatAgent>>) {
+	getVoipExtensionByUserId(agentId: ILivechatAgent['_id'], options: FindOneOptions<ILivechatAgent>) {
 		const query = {
 			_id: agentId,
 			extension: { $exists: true },
@@ -1055,7 +1047,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.update(query, update);
 	}
 
-	getAvailableAgentsIncludingExt(includeExt: string, text: string, options: WithoutProjection<FindOneOptions<IUser>>): Cursor<any> {
+	getAvailableAgentsIncludingExt(includeExt: string, text: string, options: FindOneOptions<IUser>): Cursor<any> {
 		const query: FilterQuery<ILivechatAgent> = {
 			roles: { $in: ['livechat-agent'] },
 			$and: [
@@ -1069,7 +1061,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findActiveUsersTOTPEnable(options: WithoutProjection<FindOneOptions<IUser>>): Cursor<IUser> {
+	findActiveUsersTOTPEnable(options: FindOneOptions<IUser>): Cursor<IUser> {
 		const query: FilterQuery<IUser> = {
 			'active': true,
 			'services.totp.enabled': true,
@@ -1077,7 +1069,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findActiveUsersEmail2faEnable(options: WithoutProjection<FindOneOptions<IUser>>): Cursor<IUser> {
+	findActiveUsersEmail2faEnable(options: FindOneOptions<IUser>): Cursor<IUser> {
 		const query: FilterQuery<IUser> = {
 			'active': true,
 			'services.email2fa.enabled': true,
