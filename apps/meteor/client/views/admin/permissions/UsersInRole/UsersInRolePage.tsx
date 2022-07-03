@@ -19,7 +19,7 @@ const UsersInRolePage = ({ role }: { role: IRole }): ReactElement => {
 
 	const { _id, name, description } = role;
 	const router = useRoute('admin-permissions');
-	const addUser = useEndpoint('POST', 'roles.addUserToRole');
+	const addUser = useEndpoint('POST', '/v1/roles.addUserToRole');
 
 	const handleReturn = useMutableCallback(() => {
 		router.push({
@@ -39,7 +39,7 @@ const UsersInRolePage = ({ role }: { role: IRole }): ReactElement => {
 			setUser('');
 			reload.current?.();
 		} catch (error) {
-			dispatchToastMessage({ type: 'error', message: error });
+			dispatchToastMessage({ type: 'error', message: error instanceof Error ? error : String(error) });
 		}
 	});
 

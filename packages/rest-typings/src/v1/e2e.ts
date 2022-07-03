@@ -89,21 +89,21 @@ const E2eSetRoomKeyIdSchema = {
 export const isE2eSetRoomKeyIdProps = ajv.compile<E2eSetRoomKeyIdProps>(E2eSetRoomKeyIdSchema);
 
 export type E2eEndpoints = {
-	'e2e.setUserPublicAndPrivateKeys': {
+	'/v1/e2e.setUserPublicAndPrivateKeys': {
 		POST: (params: E2eSetUserPublicAndPrivateKeysProps) => void;
 	};
-	'e2e.getUsersOfRoomWithoutKey': {
+	'/v1/e2e.getUsersOfRoomWithoutKey': {
 		GET: (params: E2eGetUsersOfRoomWithoutKeyProps) => {
 			users: Pick<IUser, '_id' | 'e2e'>[];
 		};
 	};
-	'e2e.updateGroupKey': {
-		POST: (params: E2eUpdateGroupKeyProps) => {};
+	'/v1/e2e.updateGroupKey': {
+		POST: (params: E2eUpdateGroupKeyProps) => void;
 	};
-	'e2e.setRoomKeyID': {
-		POST: (params: E2eSetRoomKeyIdProps) => {};
+	'/v1/e2e.setRoomKeyID': {
+		POST: (params: E2eSetRoomKeyIdProps) => void;
 	};
-	'e2e.fetchMyKeys': {
+	'/v1/e2e.fetchMyKeys': {
 		GET: () => { public_key: string; private_key: string };
 	};
 };

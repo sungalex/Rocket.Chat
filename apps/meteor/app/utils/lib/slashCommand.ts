@@ -8,17 +8,29 @@ import type {
 	SlashCommandPreviews,
 } from '@rocket.chat/core-typings';
 
+export interface ISlashCommandAddParams<T extends string> {
+	command: string;
+	callback?: SlashCommand<T>['callback'];
+	options?: SlashCommandOptions;
+	result?: SlashCommand['result'];
+	providesPreview?: boolean;
+	previewer?: SlashCommand['previewer'];
+	previewCallback?: SlashCommand['previewCallback'];
+	appId?: string;
+}
+
 export const slashCommands = {
 	commands: {} as Record<string, SlashCommand>,
-	add<T extends string>(
-		command: string,
-		callback?: SlashCommand<T>['callback'],
-		options: SlashCommandOptions = {},
-		result?: SlashCommand['result'],
+	add<T extends string>({
+		command,
+		callback,
+		options = {},
+		result,
 		providesPreview = false,
-		previewer?: SlashCommand['previewer'],
-		previewCallback?: SlashCommand['previewCallback'],
-	): void {
+		previewer,
+		previewCallback,
+		appId,
+	}: ISlashCommandAddParams<T>): void {
 		this.commands[command] = {
 			command,
 			callback,
@@ -27,9 +39,10 @@ export const slashCommands = {
 			permission: options.permission,
 			clientOnly: options.clientOnly || false,
 			result,
-			providesPreview,
+			providesPreview: Boolean(providesPreview),
 			previewer,
 			previewCallback,
+			appId,
 		} as SlashCommand;
 	},
 	run(command: string, params: string, message: RequiredField<Partial<IMessage>, 'rid'>, triggerId?: string | undefined): void {
