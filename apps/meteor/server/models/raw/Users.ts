@@ -527,7 +527,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update);
+		return this.updateOne(query, update);
 	}
 
 	async getAgentAndAmountOngoingChats(agentId: ILivechatAgent['_id']): Promise<{
@@ -823,7 +823,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		];
 
-		return this.col.aggregate(pipeline).next();
+		return this.col.aggregate<{ _id: string; total: number }>(pipeline).next();
 	}
 
 	updateStatusText(_id: IUser['_id'], statusText: string) {
@@ -833,7 +833,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update({ _id }, update);
+		return this.updateOne({ _id }, update);
 	}
 
 	updateStatusByAppId(appId: string, status: UserStatus) {
@@ -849,7 +849,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateOne(query, update);
 	}
 
 	openAgentsBusinessHoursByBusinessHourId(businessHourIds: ILivechatBusinessHour['_id'][]) {
@@ -866,7 +866,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	openAgentBusinessHoursByBusinessHourIdsAndAgentId(businessHourIds: ILivechatBusinessHour['_id'][], agentId: ILivechatAgent['_id']) {
@@ -884,7 +884,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	addBusinessHourByAgentIds(agentIds: ILivechatAgent['_id'][] = [], businessHourId: ILivechatBusinessHour['_id']) {
@@ -902,7 +902,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	removeBusinessHourByAgentIds(agentIds: ILivechatAgent['_id'][] = [], businessHourId: ILivechatBusinessHour['_id']) {
@@ -917,7 +917,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	openBusinessHourToAgentsWithoutDepartment(
@@ -937,7 +937,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	closeBusinessHourToAgentsWithoutDepartment(
@@ -969,7 +969,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	updateLivechatStatusBasedOnBusinessHours(agentIds: ILivechatAgent['_id'][] = []) {
@@ -985,7 +985,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	setLivechatStatusActiveBasedOnBusinessHours(agentId: ILivechatAgent['_id']) {
@@ -1003,18 +1003,18 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update);
+		return this.updateOne(query, update);
 	}
 
 	async isAgentWithinBusinessHours(agentId: ILivechatAgent['_id']) {
 		return (
-			(await this.find({
+			(await this.col.countDocuments({
 				_id: agentId,
 				openBusinessHours: {
 					$exists: true,
 					$not: { $size: 0 },
 				},
-			}).count()) > 0
+			})) > 0
 		);
 	}
 
@@ -1032,7 +1032,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		};
 
-		return this.update(query, update, { multi: true });
+		return this.updateMany(query, update);
 	}
 
 	resetTOTPById(userId: IUser['_id']) {
@@ -1088,7 +1088,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 	}
 
 	removeRoomsByRoomIdsAndUserId(rids: IRoom['_id'][], userId: IUser['_id']) {
-		return this.update(
+		return this.updateOne(
 			{
 				_id: userId,
 				__rooms: { $in: rids },
@@ -1096,7 +1096,6 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			{
 				$pullAll: { __rooms: rids },
 			},
-			{ multi: true },
 		);
 	}
 
@@ -1163,7 +1162,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query, options);
 	}
 
-	findByExtensions(extensions: string[], options: FindOptions<ILivechatAgent>): FindCursor<IUser> {
+	findByExtensions(extensions: string[], options: FindOptions<ILivechatAgent>): FindCursor<ILivechatAgent> {
 		const query = {
 			extension: {
 				$in: extensions,
@@ -1206,7 +1205,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.updateOne(query as any, update);
 	}
 
-	getAvailableAgentsIncludingExt(includeExt: string, text: string, options: FindOptions<IUser>): FindCursor<any> {
+	getAvailableAgentsIncludingExt(includeExt: string, text: string, options: FindOptions<ILivechatAgent>) {
 		const query: Filter<ILivechatAgent> = {
 			roles: { $in: ['livechat-agent'] },
 			$and: [
