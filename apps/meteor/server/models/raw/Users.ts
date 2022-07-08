@@ -85,7 +85,11 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 	 * @param {any} query
 	 * @param {any} options
 	 */
-	findUsersInRolesWithQuery(roleIds: IRole['_id'][] | IRole['_id'], query: FilterQuery<IUser>, options: FindOneOptions<IUser>) {
+	findUsersInRolesWithQuery(
+		roleIds: IRole['_id'][] | IRole['_id'],
+		query: FilterQuery<IUser>,
+		options: FindOneOptions<IUser>,
+	): Cursor<IUser> {
 		roleIds = Array.isArray(roleIds) ? roleIds : [roleIds];
 
 		Object.assign(query, { roles: { $in: roleIds } });
@@ -93,7 +97,11 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findOneByUsernameAndRoomIgnoringCase(username: IUser['username'] | RegExp, rid: IRoom['_id'], options: FindOneOptions<IUser>) {
+	findOneByUsernameAndRoomIgnoringCase(
+		username: IUser['username'] | RegExp,
+		rid: IRoom['_id'],
+		options: FindOneOptions<IUser>,
+	): Promise<IUser | null> {
 		if (typeof username === 'string') {
 			username = new RegExp(`^${escapeRegExp(username)}$`, 'i');
 		}
@@ -106,7 +114,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query, options);
 	}
 
-	findOneByIdAndLoginHashedToken(_id: IUser['_id'], token: string, options: FindOneOptions<IUser>) {
+	findOneByIdAndLoginHashedToken(_id: IUser['_id'], token: string, options: FindOneOptions<IUser>): Promise<IUser | null> {
 		const query: FilterQuery<IUser> = {
 			_id,
 			'services.resume.loginTokens.hashedToken': token,
@@ -123,7 +131,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		searchFields: any,
 		extraQuery: any[] = [],
 		{ startsWith = false, endsWith = false } = {},
-	) {
+	): Cursor<IUser> {
 		if (!Array.isArray(exceptions)) {
 			exceptions = [exceptions];
 		}
@@ -166,13 +174,13 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findActive(query: FilterQuery<IUser>, options: FindOneOptions<IUser> = {}) {
+	findActive(query: FilterQuery<IUser>, options: FindOneOptions<IUser> = {}): Cursor<IUser> {
 		Object.assign(query, { active: true });
 
 		return this.find(query, options);
 	}
 
-	findActiveByIds(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}) {
+	findActiveByIds(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}): Cursor<IUser> {
 		const query = {
 			_id: { $in: userIds },
 			active: true,
@@ -181,7 +189,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findActiveByIdsOrUsernames(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}) {
+	findActiveByIdsOrUsernames(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}): Cursor<IUser> {
 		const query = {
 			$or: [{ _id: { $in: userIds } }, { username: { $in: userIds } }],
 			active: true,
@@ -190,7 +198,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.find(query, options);
 	}
 
-	findByIds(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}) {
+	findByIds(userIds: IUser['_id'][], options: FindOneOptions<IUser> = {}): Cursor<IUser> {
 		const query = {
 			_id: { $in: userIds },
 		};
@@ -208,7 +216,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query, options);
 	}
 
-	async findOneByLDAPId(id: string, attribute: any = undefined) {
+	async findOneByLDAPId(id: string, attribute: any = undefined): Promise<IUser | null> {
 		const query: FilterQuery<IUser> = {
 			'services.ldap.id': id,
 		};
@@ -220,13 +228,13 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.findOne(query);
 	}
 
-	findLDAPUsers(options: FindOneOptions<IUser>) {
+	findLDAPUsers(options: FindOneOptions<IUser> = {}): Cursor<IUser> {
 		const query = { ldap: true };
 
 		return this.find(query, options);
 	}
 
-	findConnectedLDAPUsers(options: FindOneOptions<IUser>) {
+	findConnectedLDAPUsers(options: FindOneOptions<IUser> = {}): Cursor<IUser> {
 		const query = {
 			'ldap': true,
 			'services.resume.loginTokens': {
@@ -247,11 +255,20 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return Boolean(this.findOne<Pick<IUser, '_id'>>(query, { projection: { _id: 1 } }));
 	}
 
-	getDistinctFederationDomains() {
+	getDistinctFederationDomains(): Promise<any> {
 		return this.col.distinct('federation.origin', { federation: { $exists: true } });
 	}
 
-	async getNextLeastBusyAgent(department: ILivechatDepartment['_id'], ignoreAgentId: ILivechatAgent['_id']) {
+	async getNextLeastBusyAgent(
+		department: ILivechatDepartment['_id'],
+		ignoreAgentId: ILivechatAgent['_id'],
+	): Promise<{
+		agentId: ILivechatAgent['_id'];
+		username: ILivechatAgent['username'];
+		lastRoutingTime: ILivechatAgent['lastRoutingTime'];
+		departments: ILivechatDepartment['_id'][];
+		count: number;
+	} | null> {
 		const aggregate: any = [
 			{
 				$match: {
@@ -325,7 +342,15 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return agent;
 	}
 
-	async getLastAvailableAgentRouted(department: ILivechatDepartment['_id'], ignoreAgentId: ILivechatAgent['_id']) {
+	async getLastAvailableAgentRouted(
+		department: ILivechatDepartment['_id'],
+		ignoreAgentId: ILivechatAgent['_id'],
+	): Promise<{
+		agentId: ILivechatAgent['_id'];
+		username: ILivechatAgent['username'];
+		lastRoutingTime: ILivechatAgent['lastRoutingTime'];
+		departments: ILivechatDepartment['_id'][];
+	} | null> {
 		const aggregate: any = [
 			{
 				$match: {
@@ -399,8 +424,14 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		return this.update(query, update);
 	}
 
-	async getAgentAndAmountOngoingChats(agentId: ILivechatAgent['_id']) {
-		const aggregate: any = [
+	async getAgentAndAmountOngoingChats(agentId: ILivechatAgent['_id']): Promise<{
+		'agentId': ILivechatAgent['_id'];
+		'username': ILivechatAgent['username'];
+		'lastAssignTime': ILivechatAgent['lastAssignTime'];
+		'lastRoutingTime': ILivechatAgent['lastRoutingTime'];
+		'queueInfo.chats': number;
+	} | null> {
+		const aggregate: Exclude<Parameters<Collection<ILivechatAgent>['aggregate']>[0], undefined> = [
 			{
 				$match: {
 					_id: agentId,
@@ -439,12 +470,23 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			{ $sort: { 'queueInfo.chats': 1, 'lastAssignTime': 1, 'lastRoutingTime': 1, 'username': 1 } },
 		];
 
-		return this.col.aggregate(aggregate).next();
+		return this.col
+			.aggregate<{
+				'agentId': ILivechatAgent['_id'];
+				'username': ILivechatAgent['username'];
+				'lastAssignTime': ILivechatAgent['lastAssignTime'];
+				'lastRoutingTime': ILivechatAgent['lastRoutingTime'];
+				'queueInfo.chats': number;
+			}>(aggregate)
+			.next();
 	}
 
-	findAllResumeTokensByUserId(userId: IUser['_id']) {
+	findAllResumeTokensByUserId(userId: IUser['_id']): Promise<{ _id: IUser['_id']; tokens: string[] } | null> {
 		return this.col
-			.aggregate([
+			.aggregate<{
+				_id: IUser['_id'];
+				tokens: string[];
+			}>([
 				{
 					$match: {
 						_id: userId,
@@ -467,7 +509,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 				{ $sort: { 'tokens.when': 1 } },
 				{ $group: { _id: '$_id', tokens: { $push: '$tokens' } } },
 			])
-			.toArray();
+			.next();
 	}
 
 	findActiveByUsernameOrNameRegexWithExceptionsAndConditions(
@@ -475,7 +517,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 		exceptions: string[] | string = [],
 		conditions: string[] = [],
 		options: FindOneOptions<IUser> = {},
-	) {
+	): Cursor<IUser> {
 		if (!Array.isArray(exceptions)) {
 			exceptions = [exceptions];
 		}
@@ -593,7 +635,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 				'departments.departmentId': departmentId,
 			},
 		};
-		const params: Exclude<Parameters<Collection<IUser>['aggregate']>[0], undefined> = [match];
+		const params: Exclude<Parameters<Collection<ILivechatAgent>['aggregate']>[0], undefined> = [match];
 		if (departmentId && departmentId !== 'undefined') {
 			params.push(lookup);
 			params.push(unwind);
@@ -675,7 +717,7 @@ export class UsersRaw extends BaseRaw<IUser> implements IUsersModel {
 			},
 		];
 
-		return this.col.aggregate(pipeline).toArray();
+		return this.col.aggregate(pipeline).next();
 	}
 
 	updateStatusText(_id: IUser['_id'], statusText: string) {
