@@ -10,16 +10,9 @@ import type {
 	IBanner,
 	UserStatus,
 } from '@rocket.chat/core-typings';
+import type { PaginatedRequest } from '@rocket.chat/rest-typings';
 
 import type { FindPaginated, IBaseModel } from './IBaseModel';
-
-export type PaginatedRequest<T = {}, S extends string = string> = {
-	count?: number;
-	offset?: number;
-	sort?: `{ "${S}": ${1 | -1} }` | string;
-	/* deprecated */
-	query?: string;
-} & T;
 
 export interface IUsersModel extends IBaseModel<IUser> {
 	addRolesByUserId(uid: IUser['_id'], roles: IRole['_id'][]): Promise<UpdateResult>;
