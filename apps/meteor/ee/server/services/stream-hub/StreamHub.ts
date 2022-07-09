@@ -1,3 +1,6 @@
+import type { ISetting, IUser, RocketChatRecordDeleted } from '@rocket.chat/core-typings';
+import type { Collection } from 'mongodb';
+
 import { getConnection } from '../mongo';
 import { ServiceClass, IServiceClass } from '../../../../server/sdk/types/ServiceClass';
 import { initWatchers } from '../../../../server/modules/watchers/watchers.module';
@@ -18,8 +21,7 @@ import { PermissionsRaw } from '../../../../server/models/raw/Permissions';
 import { EmailInboxRaw } from '../../../../server/models/raw/EmailInbox';
 import { PbxEventsRaw } from '../../../../server/models/raw/PbxEvents';
 import { api } from '../../../../server/sdk/api';
-import type { ISetting, IUser, RocketChatRecordDeleted } from '@rocket.chat/core-typings';
-import type { Collection } from 'mongodb';
+
 export class StreamHub extends ServiceClass implements IServiceClass {
 	protected name = 'hub';
 

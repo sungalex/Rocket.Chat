@@ -100,7 +100,13 @@ export interface IUsersModel extends IBaseModel<IUser> {
 		options?: FindOptions<IUser>,
 	): FindCursor<IUser>;
 
-	countAllAgentsStatus({ departmentId }: { departmentId?: ILivechatDepartment['_id'] }): any;
+	countAllAgentsStatus({ departmentId }: { departmentId?: ILivechatDepartment['_id'] }): Promise<{
+		_id: null;
+		offline: number;
+		away: number;
+		busy: number;
+		available: number;
+	} | null>;
 
 	getTotalOfRegisteredUsersByDate({ start, end, options }: { start: Date; end: Date; options?: PaginatedRequest }): Promise<
 		{
