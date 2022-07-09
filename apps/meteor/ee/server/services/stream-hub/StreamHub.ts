@@ -18,7 +18,8 @@ import { PermissionsRaw } from '../../../../server/models/raw/Permissions';
 import { EmailInboxRaw } from '../../../../server/models/raw/EmailInbox';
 import { PbxEventsRaw } from '../../../../server/models/raw/PbxEvents';
 import { api } from '../../../../server/sdk/api';
-
+import type { ISetting, IUser, RocketChatRecordDeleted } from '@rocket.chat/core-typings';
+import type { Collection } from 'mongodb';
 export class StreamHub extends ServiceClass implements IServiceClass {
 	protected name = 'hub';
 
@@ -28,8 +29,8 @@ export class StreamHub extends ServiceClass implements IServiceClass {
 		const Trash = db.collection('rocketchat__trash');
 
 		const Rooms = new RoomsRaw(db, Trash);
-		const Settings = new SettingsRaw(db);
-		const Users = new UsersRaw(db, Trash);
+		const Settings = new SettingsRaw(db, Trash as unknown as Collection<RocketChatRecordDeleted<ISetting>>);
+		const Users = new UsersRaw(db, Trash as unknown as Collection<RocketChatRecordDeleted<IUser>>);
 		const UsersSessions = new UsersSessionsRaw(db);
 		const Subscriptions = new SubscriptionsRaw(db);
 		const LivechatInquiry = new LivechatInquiryRaw(db);
