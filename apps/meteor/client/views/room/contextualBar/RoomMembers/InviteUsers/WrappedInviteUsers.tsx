@@ -1,3 +1,4 @@
+import { IRoom } from '@rocket.chat/core-typings';
 import { useMutableCallback } from '@rocket.chat/fuselage-hooks';
 import { useEndpoint, useTranslation } from '@rocket.chat/ui-contexts';
 import React, { useState, useEffect } from 'react';
@@ -7,8 +8,14 @@ import { useTabBarClose } from '../../../providers/ToolboxProvider';
 import EditInvite from '../EditInvite';
 import InviteUsers from './InviteUsers';
 
-const WrappedInviteUsers = ({ rid, tabBar, onClickBack }) => {
-	const [editing, setEditing] = useState(false);
+type WrappedInviteUsersProps = {
+	onClickBack?: () => void;
+	rid: IRoom['_id'];
+	tabBar: any;
+};
+
+const WrappedInviteUsers = ({ rid, tabBar, onClickBack }: WrappedInviteUsersProps) => {
+	const [editing, setEditing] = useState<boolean>(false);
 	const format = useFormatDateAndTime();
 	const t = useTranslation();
 
@@ -19,14 +26,28 @@ const WrappedInviteUsers = ({ rid, tabBar, onClickBack }) => {
 
 	const findOrCreateInvite = useEndpoint('POST', '/v1/findOrCreateInvite');
 
-	const [{ days = 1, maxUses = 0 }, setDayAndMaxUses] = useState({});
+	const [{ days = 1, maxUses = 0 }, setDayAndMaxUses] = useState<{
+		days: number;
+		maxUses: number;
+	  }>({
+		days: 1,
+		maxUses: 0,
+	  });
 
 	const setParams = useMutableCallback((args) => {
 		setDayAndMaxUses(args);
 		setEditing(false);
 	});
 
-	const [state, setState] = useState();
+	const [state, setState] = useState<{
+		error?: unknown;
+		link?: string;
+		url?: string;
+		caption?: string;
+	}>({
+		url: '',
+		caption: '',
+	});
 
 	const linkExpirationText = useMutableCallback((data) => {
 		if (!data) {
@@ -88,7 +109,7 @@ const WrappedInviteUsers = ({ rid, tabBar, onClickBack }) => {
 			onClickClose={onClickClose}
 			onClickBack={onClickBack}
 			onClickEdit={handleEdit}
-			linkText={state?.url}
+			linkText={state.url}
 			captionText={state?.caption}
 		/>
 	);

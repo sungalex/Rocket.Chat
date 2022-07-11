@@ -5,7 +5,16 @@ import React from 'react';
 import VerticalBar from '../../../../../components/VerticalBar';
 import useClipboardWithToast from '../../../../../hooks/useClipboardWithToast';
 
-const InviteUsers = ({ onClickBack, onClickClose, onClickEdit, captionText, linkText, error }) => {
+type InviteUsersProps = {
+	onClickClose?: () => void;
+	onClickBack?: () => void;
+	onClickEdit?: () => void;
+	captionText?: string;
+	linkText?: string;
+	error?: unknown;
+};
+
+const InviteUsers = ({ onClickBack, onClickClose, onClickEdit, captionText, linkText = '', error }: InviteUsersProps) => {
 	const t = useTranslation();
 
 	const { copy } = useClipboardWithToast(linkText);
