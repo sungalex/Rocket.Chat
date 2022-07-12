@@ -12,29 +12,23 @@ import { RocketChatImportFileInstance } from '../startup/store';
 
 export const getImportFileData = async (userId: IUser['_id']): Promise<any> => {
 	if (!userId) {
-		throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'getImportFileData' });
+		throw new Meteor.Error('error-invalid-user', 'Invalid user', 'getImportFileData');
 	}
 
 	if (!hasPermission(userId, 'run-import')) {
-		throw new Meteor.Error('error-action-not-allowed', 'Importing is not allowed', {
-			method: 'getImportFileData',
-		});
+		throw new Meteor.Error('error-action-not-allowed', 'Importing is not allowed', 'getImportFileData');
 	}
 
 	const operation = Imports.findLastImport();
 	if (!operation) {
-		throw new Meteor.Error('error-operation-not-found', 'Import Operation Not Found', {
-			method: 'getImportFileData',
-		});
+		throw new Meteor.Error('error-operation-not-found', 'Import Operation Not Found', 'getImportFileData');
 	}
 
 	const { importerKey } = operation;
 
 	const importer = Importers.get(importerKey);
 	if (!importer) {
-		throw new Meteor.Error('error-importer-not-defined', `The importer (${importerKey}) has no import class defined.`, {
-			method: 'getImportFileData',
-		});
+		throw new Meteor.Error('error-importer-not-defined', `The importer (${importerKey}) has no import class defined.`, 'getImportFileData');
 	}
 
 	importer.instance = new importer.importer(importer, operation); // eslint-disable-line new-cap
@@ -51,9 +45,7 @@ export const getImportFileData = async (userId: IUser['_id']): Promise<any> => {
 		if (importer.instance.importRecord && importer.instance.importRecord.valid) {
 			return { waiting: true };
 		}
-		throw new Meteor.Error('error-import-operation-invalid', 'Invalid Import Operation', {
-			method: 'getImportFileData',
-		});
+		throw new Meteor.Error('error-import-operation-invalid', 'Invalid Import Operation', 'getImportFileData');
 	}
 
 	const readySteps = [ProgressStep.USER_SELECTION, ProgressStep.DONE, ProgressStep.CANCELLED, ProgressStep.ERROR];
@@ -67,7 +59,7 @@ export const getImportFileData = async (userId: IUser['_id']): Promise<any> => {
 	const promise = importer.instance.prepareUsingLocalFile(fullFilePath);
 
 	if (promise && promise instanceof Promise) {
-		Promise.await(promise);
+		await promise;
 	}
 
 	return importer.instance.buildSelection();
