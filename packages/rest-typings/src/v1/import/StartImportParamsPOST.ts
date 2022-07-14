@@ -1,4 +1,4 @@
-import Ajv, { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 
 const ajv = new Ajv({
 	coerceTypes: true,
@@ -8,23 +8,34 @@ export type StartImportParamsPOST = {
 	input: {
 		users: [
 			{
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				user_id: string;
 				username: string;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				email: string;
 				is_deleted: boolean;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				is_bot: boolean;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				do_import: boolean;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				is_email_taken: boolean;
 			},
 		];
 		channels: [
 			{
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				channel_id: string;
+
 				name: string;
 				creator?: string;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				is_archived: boolean;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				do_import: boolean;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				is_private: boolean;
+				// eslint-disable-next-line @typescript-eslint/camelcase
 				is_direct: boolean;
 			},
 		];
