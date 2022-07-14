@@ -1,4 +1,5 @@
 import type { IImport, IImportChannel, IImportUser } from '@rocket.chat/core-typings';
+import type { StartImportParamsPOST } from './StartImportParamsPOST';
 
 export type ImportEndpoints = {
 	'/v1/uploadImportFile': {
@@ -8,31 +9,7 @@ export type ImportEndpoints = {
 		POST: (params: { fileUrl: string; importerKey: string }) => void;
 	};
 	'/v1/startImport': {
-		POST: (params: {
-			input: {
-				users: [
-					{
-						user_id: string;
-						username: string;
-						email: string;
-						is_delete: boolean;
-						is_bot: boolean;
-						do_import: boolean;
-						is_email_taken: boolean;
-					},
-				];
-				channels: [
-					{
-						channel_id: string;
-						name: string;
-						is_archived: boolean;
-						do_import: boolean;
-						is_private: boolean;
-						is_direct: boolean;
-					},
-				];
-			};
-		}) => void;
+		POST: (params: StartImportParamsPOST) => void;
 	};
 	'/v1/getImportFileData': {
 		GET: () => {

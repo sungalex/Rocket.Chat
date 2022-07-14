@@ -14,8 +14,10 @@ import {
 import { API } from '../api';
 import { Imports } from '../../../models/server';
 import { Importers } from '../../../importer/server';
-import { getImportFileData } from '../../../importer/server/methods/getImportFileData';
-import { executeUploadImportFile } from '../../../importer/server/methods/uploadImportFile';
+import {
+	executeUploadImportFile,
+	executeStartImport,
+} from '../../../importer/server/methods';
 
 API.v1.addRoute(
 	'uploadImportFile',
@@ -54,12 +56,13 @@ API.v1.addRoute(
 	{
 		authRequired: true,
 		validateParams: isStartImportParamsPOST,
+		permissionsRequired: ['run-import'],
 	},
 	{
 		post() {
 			const { input } = this.bodyParams;
 
-			Meteor.call('startImport', input);
+			executeStartImport({ input });
 
 			return API.v1.success();
 		},
