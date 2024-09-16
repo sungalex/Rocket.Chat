@@ -240,7 +240,7 @@
 		"aws-sdk": "^2.1160.0",
 		"bad-words": "^3.0.4",
 		"bcrypt": "^5.0.1",
-		"body-parser": "1.20.0",
+		"body-parser": "1.20.3",
 		"bson": "^4.6.4",
 		"busboy": "^1.6.0",
 		"bytebuffer": "5.0.1",
